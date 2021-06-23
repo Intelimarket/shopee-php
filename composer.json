@@ -1,5 +1,5 @@
 {
-    "name": "upbase/shopee-php-sdk",
+    "name": "intelimarket/shopee-php",
     "description": "Shopee Partner API PHP SDK",
     "type": "library",
     "keywords": [
