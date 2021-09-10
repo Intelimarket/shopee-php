@@ -2,11 +2,13 @@
 
 namespace Shopee\Nodes\Logistics;
 
+use Shopee\ClientV2;
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
-class Logistics extends NodeAbstract
+class Logistics extends NodeAbstractV2
 {
     /**
      * Use this call to get all required param for init logistic.
@@ -17,6 +19,51 @@ class Logistics extends NodeAbstract
     public function getAddress($parameters = []): ResponseData
     {
         return $this->post('/api/v1/logistics/address/get', $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getShippingDocumentInfo($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/logistics/get_shipping_document_info', ClientV2::API_TYPE_SHOP, [], $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function downloadShippingDocument($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/logistics/download_shipping_document', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getShippingParameter($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/logistics/get_shipping_parameter', ClientV2::API_TYPE_SHOP, [], $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getTrackingNumber($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/logistics/get_tracking_number', ClientV2::API_TYPE_SHOP, [], $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getTrackingInfo($parameters = []): ResponseData
+    {
+        return $this->get('/api/v2/logistics/get_tracking_info', ClientV2::API_TYPE_SHOP, [], $parameters);
     }
 
     /**
@@ -60,7 +107,7 @@ class Logistics extends NodeAbstract
      */
     public function getLogistics($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/logistics/channel/get', $parameters);
+        return $this->get('/api/v2/logistics/get_channel_list', ClientV2::API_TYPE_SHOP, [], $parameters);
     }
 
     /**

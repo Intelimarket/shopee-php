@@ -30,6 +30,16 @@ use function time;
 /**
  * @property Nodes\Shop\Authorization $author
  * @property Nodes\Shop\Shop $shop
+ * @property Nodes\Item\Item $item
+ * @property Nodes\Logistics\Logistics $logistics
+ * @property Nodes\Order\Order $order
+ * @property Nodes\Returns\Returns $returns
+ * @property Nodes\Discount\Discount $discount
+ * @property Nodes\ShopCategory\ShopCategory $shopCategory
+ * @property Nodes\MediaSpace\Image $image
+ * @property Nodes\Push\Push $push
+ * @property Nodes\Payment\Payment $payment
+ * @property Nodes\Item\Brand $brand
  */
 class ClientV2
 {
@@ -122,8 +132,18 @@ class ClientV2
             throw new InvalidArgumentException('Signature generator not implement SignatureGeneratorInterface');
         }
 
-        $this->nodes['author'] = new Nodes\Shop\Authorization($this);
+        $this->nodes['item'] = new Nodes\Item\Item($this);
+        $this->nodes['logistics'] = new Nodes\Logistics\Logistics($this);
+        $this->nodes['order'] = new Nodes\Order\Order($this);
+        $this->nodes['returns'] = new Nodes\Returns\Returns($this);
         $this->nodes['shop'] = new Nodes\Shop\Shop($this);
+        $this->nodes['shopCategory'] = new Nodes\ShopCategory\ShopCategory($this);
+        $this->nodes['custom'] = new Nodes\Custom\Custom($this);
+        $this->nodes['discount'] = new Nodes\Discount\Discount($this);
+        $this->nodes['image'] = new Nodes\MediaSpace\Image($this);
+        $this->nodes['push'] = new Nodes\Push\Push($this);
+        $this->nodes['payment'] = new Nodes\Payment\Payment($this);
+        $this->nodes['brand'] = new Nodes\Item\Brand($this);
 
     }
 
@@ -236,10 +256,13 @@ class ClientV2
      * @param array $data
      * @return RequestInterface
      */
-    public function newRequest($uri, $api_type, array $headers = [], $data = []): RequestInterface
+    public function newRequest($uri, $api_type, array $headers = [], $data = [], array $query = []): RequestInterface
     {
+        if ($query){
+            $uri.= '?'.http_build_query($query);
+        }
         $uri = Utils::uriFor($uri);
-        $auth_query = $this->signature($uri, $api_type);
+        $queryString = $this->signature($uri, $api_type);
         $path = $this->baseUrl->getPath() . $uri->getPath();
         $uri = $uri
             ->withScheme($this->baseUrl->getScheme())
@@ -247,7 +270,7 @@ class ClientV2
             ->withHost($this->baseUrl->getHost())
             ->withPort($this->baseUrl->getPort())
             ->withPath($path)
-            ->withQuery($auth_query);
+            ->withQuery($queryString);
 
         $jsonBody = $this->createJsonBody($data);
 
@@ -302,6 +325,53 @@ class ClientV2
             ->withQuery($auth_query);
         $uri = Uri::withQueryValue($uri, 'redirect', $redirect_url);
         return $uri->__toString();
+    }
+
+    public function upload(RequestInterface $request, $file_url): ResponseInterface
+    {
+        try {
+            list($tempImageDownload, $fileName) = $this->downloadFile($file_url);
+            $response = $this->httpClient->request(
+                "POST",
+                $request->getUri(),
+                [
+                    'multipart' => [
+                        [
+                            'name' => 'image',
+                            'contents' => fopen($tempImageDownload, 'r'),
+                            'file_name' => $fileName
+                        ],
+                    ]
+                ]);
+        } catch (GuzzleClientException $exception) {
+            switch ($exception->getCode()) {
+                case 400:
+                    $className = BadRequestException::class;
+                    break;
+                case 403:
+                    $className = AuthException::class;
+                    break;
+                default:
+                    $className = ClientException::class;
+            }
+
+            throw Factory::create($className, $exception);
+        } catch (GuzzleServerException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        } catch (GuzzleException $exception) {
+            throw Factory::create(ServerException::class, $exception);
+        }
+
+        return $response;
+    }
+
+    private function downloadFile($urlDownload)
+    {
+        $path_info = pathinfo($urlDownload);
+        $filename = $path_info['basename'];
+        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        copy($urlDownload, $tempImage);
+        return [$tempImage, $filename];
     }
 
 }

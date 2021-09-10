@@ -49,7 +49,7 @@ class SignatureGenerator implements SignatureGeneratorInterface
             'partner_id' => $partner_id,
             'merchant_id' => $partner_id,
             'timestamp' => $time_st,
-            'access_token' => $partner_id,
+            'access_token' => $access_token,
             'sign' => $sign
         ]);
         return $path->getQuery();

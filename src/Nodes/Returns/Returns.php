@@ -3,10 +3,11 @@
 namespace Shopee\Nodes\Returns;
 
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
-class Returns extends NodeAbstract
+class Returns extends NodeAbstractV2
 {
     /**
      * Confirm return.

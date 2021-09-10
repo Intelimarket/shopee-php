@@ -3,10 +3,11 @@
 namespace Shopee\Nodes\Discount;
 
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
-class Discount extends NodeAbstract
+class Discount extends NodeAbstractV2
 {
     /**
      * Use this api to add shop discount activity.

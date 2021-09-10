@@ -3,9 +3,10 @@
 namespace Shopee\Nodes\Push;
 
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\ResponseData;
 
-class Push extends NodeAbstract
+class Push extends NodeAbstractV2
 {
     /**
      * Use this API to get the configuration information of push service.

@@ -3,10 +3,11 @@
 namespace Shopee\Nodes\ShopCategory;
 
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
-class ShopCategory extends NodeAbstract
+class ShopCategory extends NodeAbstractV2
 {
     /**
      * Use this call to add a new collecion.

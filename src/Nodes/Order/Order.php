@@ -2,11 +2,13 @@
 
 namespace Shopee\Nodes\Order;
 
+use Shopee\ClientV2;
 use Shopee\Nodes\NodeAbstract;
+use Shopee\Nodes\NodeAbstractV2;
 use Shopee\RequestParametersInterface;
 use Shopee\ResponseData;
 
-class Order extends NodeAbstract
+class Order extends NodeAbstractV2
 {
     /**
      * Use this call to retrieve detailed escrow information about one order based on OrderID.
@@ -50,7 +52,7 @@ class Order extends NodeAbstract
      */
     public function getOrderDetails($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/detail', $parameters);
+        return $this->get('/api/v2/order/get_order_detail', ClientV2::API_TYPE_SHOP, [], $parameters);
     }
 
     /**
@@ -72,7 +74,7 @@ class Order extends NodeAbstract
      */
     public function getOrdersList($parameters = []): ResponseData
     {
-        return $this->post('/api/v1/orders/basics', $parameters);
+        return $this->get('/api/v2/order/get_order_list', ClientV2::API_TYPE_SHOP, [], $parameters);
     }
 
     /**
