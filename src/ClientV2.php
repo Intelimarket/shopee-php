@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ServerException as GuzzleServerException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\Utils;
+use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -365,13 +366,28 @@ class ClientV2
         return $response;
     }
 
-    private function downloadFile($urlDownload)
+    private function downloadFile($urlDownload, $autoResize=true)
     {
         $path_info = pathinfo($urlDownload);
         $filename = $path_info['basename'];
         $tempImage = tempnam(sys_get_temp_dir(), $filename);
+
         copy($urlDownload, $tempImage);
+
+        /**
+         * Auto resize logic when > 1024
+         */
+        if ($autoResize){
+
+            $img = \Image::make($tempImage);
+            if ($img->width() > 1024){
+                $img->resize(1024, null);
+            }
+
+        }
+
         return [$tempImage, $filename];
+        
     }
 
 }
