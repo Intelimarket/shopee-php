@@ -43,6 +43,15 @@ class Logistics extends NodeAbstractV2
      * @param array|RequestParametersInterface $parameters
      * @return ResponseData
      */
+    public function createShippingDocument($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/logistics/create_shipping_document', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
     public function shipOrder($parameters = []): ResponseData
     {
         return $this->post('/api/v2/logistics/ship_order', ClientV2::API_TYPE_SHOP, $parameters);
@@ -55,6 +64,15 @@ class Logistics extends NodeAbstractV2
     public function getShippingParameter($parameters = []): ResponseData
     {
         return $this->get('/api/v2/logistics/get_shipping_parameter', ClientV2::API_TYPE_SHOP, [], $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
+    public function getShippingDocumentResult($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/logistics/get_shipping_document_result', ClientV2::API_TYPE_SHOP, $parameters);
     }
 
     /**

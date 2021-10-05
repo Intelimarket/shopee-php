@@ -2,6 +2,7 @@
 
 namespace Shopee;
 
+use App\Util\StringHelper;
 use Psr\Http\Message\ResponseInterface;
 
 use function json_decode;
@@ -16,8 +17,11 @@ class ResponseData
 
     public function __construct(ResponseInterface $response)
     {
-        $json = $response->getBody()->getContents();
-        $data = json_decode($json, true);
+        $data = $response->getBody()->getContents();
+
+        if (ctype_print($data)){
+            $data = json_decode($data, true);
+        }
 
         $this->response = $response;
         $this->data = $data;
@@ -28,7 +32,7 @@ class ResponseData
         return $this->response;
     }
 
-    public function getData(): array
+    public function getData()
     {
         return $this->data;
     }
