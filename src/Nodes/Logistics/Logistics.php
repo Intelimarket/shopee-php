@@ -43,6 +43,15 @@ class Logistics extends NodeAbstractV2
      * @param array|RequestParametersInterface $parameters
      * @return ResponseData
      */
+    public function shipOrder($parameters = []): ResponseData
+    {
+        return $this->post('/api/v2/logistics/ship_order', ClientV2::API_TYPE_SHOP, $parameters);
+    }
+
+    /**
+     * @param array|RequestParametersInterface $parameters
+     * @return ResponseData
+     */
     public function getShippingParameter($parameters = []): ResponseData
     {
         return $this->get('/api/v2/logistics/get_shipping_parameter', ClientV2::API_TYPE_SHOP, [], $parameters);
