@@ -370,7 +370,7 @@ class ClientV2
     {
         $path_info = pathinfo($urlDownload);
         $filename = $path_info['basename'];
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        $tempImage = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'_'.$filename;
 
         copy($urlDownload, $tempImage);
 
@@ -382,12 +382,13 @@ class ClientV2
             $img = \Image::make($tempImage);
             if ($img->width() > 1024){
                 $img->resize(1024, null);
+                $img->save();
             }
 
         }
 
         return [$tempImage, $filename];
-        
+
     }
 
 }
