@@ -19,8 +19,10 @@ class ResponseData
     {
         $data = $response->getBody()->getContents();
 
-        if (ctype_print($data)){
-            $data = json_decode($data, true);
+        $dataDecode = json_decode($data, true);
+
+        if (ctype_print($data) || ($dataDecode && is_array($dataDecode))){
+            $data = $dataDecode;
         }
 
         $this->response = $response;
