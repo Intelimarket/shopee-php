@@ -366,26 +366,13 @@ class ClientV2
         return $response;
     }
 
-    private function downloadFile($urlDownload, $autoResize=true)
+    private function downloadFile($urlDownload)
     {
         $path_info = pathinfo($urlDownload);
         $filename = $path_info['basename'];
         $tempImage = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid().'_'.$filename;
 
         copy($urlDownload, $tempImage);
-
-        /**
-         * Auto resize logic when > 1024
-         */
-        if ($autoResize){
-
-            $img = \Image::make($tempImage);
-            if ($img->width() > 1024){
-                $img->resize(1024, null);
-                $img->save();
-            }
-
-        }
 
         return [$tempImage, $filename];
 
