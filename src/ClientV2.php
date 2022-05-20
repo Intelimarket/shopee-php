@@ -282,7 +282,7 @@ class ClientV2
             'POST', // All APIs should use POST method
             $uri,
             $headers,
-            $jsonBody
+            $data ? $jsonBody : null
         );
     }
 
